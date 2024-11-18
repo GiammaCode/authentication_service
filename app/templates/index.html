@@ -3,32 +3,41 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Authentication API</title>
+    <title>Authentication Service</title>
+    <style>
+      body {
+        background-color: #141414;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        text-align: center;
+        margin-top: 100px;
+      }
+      h1 {
+        color: #e50914;
+      }
+      a {
+        display: inline-block;
+        margin: 10px;
+        padding: 15px;
+        background-color: #e50914;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 5px;
+      }
+      a:hover {
+        background-color: #b20710;
+      }
+    </style>
   </head>
   <body>
-    <h1>Register User</h1>
-    <form action="/auth/register" method="post">
-      <label for="email">Email:</label><br>
-      <input type="text" id="email" name="email"><br>
-      <label for="password">Password:</label><br>
-      <input type="password" id="password" name="password"><br><br>
-      <input type="submit" value="Register">
-    </form>
-
-    <h1>Login User</h1>
-    <form action="/auth/login" method="post">
-      <label for="email">Email:</label><br>
-      <input type="text" id="email" name="email"><br>
-      <label for="password">Password:</label><br>
-      <input type="password" id="password" name="password"><br><br>
-      <input type="submit" value="Login">
-    </form>
-
-    <h1>Reset Password</h1>
-    <form action="/auth/reset-password" method="post">
-      <label for="email">Email:</label><br>
-      <input type="text" id="email" name="email"><br><br>
-      <input type="submit" value="Reset Password">
-    </form>
+    <div class="container">
+      <h1>Welcome to the Authentication Service</h1>
+      <a href="/auth/register">Register</a>
+      <a href="/auth/login">Login</a>
+      <a href="/auth/reset-password">Reset Password</a>
+    </div>
   </body>
 </html>

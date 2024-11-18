@@ -26,31 +26,30 @@ def register():
         users[email] = password
         return redirect(url_for('home'))
 
-    return render_template('home.html')
+    return render_template('register.html')
 
 # Endpoint per autenticare un utente
 @app.route('/auth/login', methods=['POST'])
 def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-    if not email or not password:
-        return jsonify({'error': 'Invalid input'}), 400
+        if not email or not password:
+            return jsonify({'error': 'Invalid input'}), 400
 
-    if users.get(email) == password:
-        return jsonify({'accessToken': 'fake-jwt-token-for-' + email}), 200
-    else:
-        return jsonify({'error': 'Authentication failed'}), 401
+        if users.get(email) == password:
+            return redirect(url_for('home'))
+        else:
+            return jsonify({'error': 'Authentication failed'}), 401
 
-# Endpoint per il logout di un utente
+    return render_template('login.html')
+
+# Pagina per il logout
 @app.route('/auth/logout', methods=['POST'])
 def logout():
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return jsonify({'error': 'Invalid or expired token'}), 401
+    return redirect(url_for('index'))
 
-    # Per questo esempio, il logout viene simulato semplicemente con una risposta di successo
-    return jsonify({'message': 'User logged out successfully'}), 200
 
 # Endpoint per resettare la password di un utente
 @app.route('/auth/reset-password', methods=['POST'])
