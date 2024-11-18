@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Authentication API</title>
+  </head>
+  <body>
+    <h1>Register User</h1>
+    <form action="/auth/register" method="post">
+      <label for="email">Email:</label><br>
+      <input type="text" id="email" name="email"><br>
+      <label for="password">Password:</label><br>
+      <input type="password" id="password" name="password"><br><br>
+      <input type="submit" value="Register">
+    </form>
+
+    <h1>Login User</h1>
+    <form action="/auth/login" method="post">
+      <label for="email">Email:</label><br>
+      <input type="text" id="email" name="email"><br>
+      <label for="password">Password:</label><br>
+      <input type="password" id="password" name="password"><br><br>
+      <input type="submit" value="Login">
+    </form>
+
+    <h1>Reset Password</h1>
+    <form action="/auth/reset-password" method="post">
+      <label for="email">Email:</label><br>
+      <input type="text" id="email" name="email"><br><br>
+      <input type="submit" value="Reset Password">
+    </form>
+  </body>
+</html>
