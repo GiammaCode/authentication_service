@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 
 app = Flask(__name__)
 
@@ -13,17 +13,20 @@ def index():
 # Endpoint per registrare un nuovo utente
 @app.route('/auth/register', methods=['POST'])
 def register():
-    email = request.form.get('email')
-    password = request.form.get('password')
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-    if not email or not password:
-        return jsonify({'error': 'Invalid input'}), 400
+        if not email or not password:
+            return jsonify({'error': 'Invalid input'}), 400
 
-    if email in users:
-        return jsonify({'error': 'User already exists'}), 400
+        if email in users:
+            return jsonify({'error': 'User already exists'}), 400
 
-    users[email] = password
-    return jsonify({'message': 'User successfully registered'}), 201
+        users[email] = password
+        return redirect(url_for('home'))
+
+    return render_template('home.html')
 
 # Endpoint per autenticare un utente
 @app.route('/auth/login', methods=['POST'])
@@ -62,6 +65,11 @@ def reset_password():
 
     # Per questo esempio, simuleremo l'invio dell'email di reset della password
     return jsonify({'message': 'Password reset email sent'}), 200
+
+# Pagina principale simile a Netflix
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
