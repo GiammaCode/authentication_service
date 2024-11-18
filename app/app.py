@@ -1,6 +1,12 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask_jwt_extended import JWTManager, create_access_token
+from flask_cors import CORS  
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+jwt = JWTManager(app)
+
+CORS(app)
 
 data_store = []  # Una semplice lista per tenere i dati utente
 users = {}  # Un dizionario per memorizzare utenti e password
@@ -12,62 +18,62 @@ def index():
 
 # Endpoint per registrare un nuovo utente
 # Pagina di registrazione
-@app.route('/auth/register', methods=['GET', 'POST'])
+@app.route('/auth/register', methods=['POST'])
 def register():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+     # Ricezione dei dati in formato JSON
+    email = request.json.get('email', None)
+    password = request.json.get('password', None)
 
-        if not email or not password:
-            return jsonify({'error': 'Invalid input'}), 400
+    # Verifica degli input
+    if not email or not password:
+        return jsonify({'error': 'Invalid input'}), 400
 
-        if email in users:
-            return jsonify({'error': 'User already exists'}), 400
+    # Verifica se l'utente esiste già
+    if email in users:
+        return jsonify({'error': 'User already exists'}), 400
 
-        users[email] = password
-        return redirect(url_for('home'))
+    # Registrazione dell'utente
+    users[email] = password
 
-    return render_template('register.html')
+    # Creazione di un token JWT per il nuovo utente
+    access_token = create_access_token(identity=email)
+    
+    # Restituzione di una risposta di successo con il token JWT
+    return jsonify(access_token=access_token, message="User registered successfully"), 201
+
 
 # Endpoint per autenticare un utente
-@app.route('/auth/login', methods=['GET', 'POST'])
+@app.route('/auth/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        if not email or not password:
-            return jsonify({'error': 'Invalid input'}), 400
-
-        if users.get(email) == password:
-            return redirect(url_for('home'))
-        else:
-            return jsonify({'error': 'Authentication failed'}), 401
-
-    return render_template('login.html')
+    email = request.json.get('email', None)
+    password = request.json.get('password', None)
+    
+    if email in users and users[email] == password:
+        access_token = create_access_token(identity=email)
+        return jsonify(access_token=access_token), 200
+    else:
+        return jsonify({'error': 'Authentication failed'}), 401
+    
 
 # Pagina per il logout
 @app.route('/auth/logout', methods=['GET'])
 def logout():
-    return redirect(url_for('index'))
+     return jsonify({"message": "User logged out successfully"}), 200
 
 
-# Endpoint per resettare la password di un utente
-@app.route('/auth/reset-password', methods=['GET', 'POST'])
+@app.route('/auth/reset-password', methods=['POST'])
 def reset_password():
-    if request.method == 'POST':
-        email = request.form.get('email')
+    email = request.json.get('email', None)
 
-        if not email:
-            return jsonify({'error': 'Invalid input'}), 400
+    if not email:
+        return jsonify({'error': 'Invalid input'}), 400
 
-        if email not in users:
-            return jsonify({'error': 'User not found'}), 404
+    if email not in users:
+        return jsonify({'error': 'User not found'}), 404
 
-        # Per esempio, si può simulare l'invio dell'email di reset
-        return jsonify({'message': 'Password reset email sent'}), 200
-
-    return render_template('reset_password.html')
+    # Qui simuleremo l'invio dell'email di reset della password
+    # In un contesto reale, si potrebbe inviare un'email con un link di reset
+    return jsonify({'message': 'Password reset email sent'}), 200
 
 # Pagina principale simile a Netflix
 @app.route('/home')
