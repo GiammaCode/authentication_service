@@ -11,7 +11,8 @@ def index():
     return render_template('index.html')
 
 # Endpoint per registrare un nuovo utente
-@app.route('/auth/register', methods=['POST'])
+# Pagina di registrazione
+@app.route('/auth/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -29,7 +30,7 @@ def register():
     return render_template('register.html')
 
 # Endpoint per autenticare un utente
-@app.route('/auth/login', methods=['POST'])
+@app.route('/auth/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -46,24 +47,27 @@ def login():
     return render_template('login.html')
 
 # Pagina per il logout
-@app.route('/auth/logout', methods=['POST'])
+@app.route('/auth/logout', methods=['GET'])
 def logout():
     return redirect(url_for('index'))
 
 
 # Endpoint per resettare la password di un utente
-@app.route('/auth/reset-password', methods=['POST'])
+@app.route('/auth/reset-password', methods=['GET', 'POST'])
 def reset_password():
-    email = request.form.get('email')
+    if request.method == 'POST':
+        email = request.form.get('email')
 
-    if not email:
-        return jsonify({'error': 'Invalid input'}), 400
+        if not email:
+            return jsonify({'error': 'Invalid input'}), 400
 
-    if email not in users:
-        return jsonify({'error': 'User not found'}), 404
+        if email not in users:
+            return jsonify({'error': 'User not found'}), 404
 
-    # Per questo esempio, simuleremo l'invio dell'email di reset della password
-    return jsonify({'message': 'Password reset email sent'}), 200
+        # Per esempio, si può simulare l'invio dell'email di reset
+        return jsonify({'message': 'Password reset email sent'}), 200
+
+    return render_template('reset_password.html')
 
 # Pagina principale simile a Netflix
 @app.route('/home')
@@ -71,4 +75,4 @@ def home():
     return render_template('home.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+      app.run(host='0.0.0.0', port=5000, debug=True)
