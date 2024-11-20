@@ -2,7 +2,7 @@
 
 ## Overview
 
-NETFILM Authentication Service is a simple Flask-based application that provides user authentication features. It allows users to register, log in, reset passwords, and log out. The service also provides a graphical interface inspired by the Netflix theme. This application is containerized using Docker for easy portability and deployment.
+NETFILM Authentication Service is a simple Flask-based application that provides user authentication features. It allows users to register, log in, reset passwords, and log out. This application is containerized using Docker for easy portability and deployment.
 
 ## Features
 - **User Registration**: Allows new users to create an account.
