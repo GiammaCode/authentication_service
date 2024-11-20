@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+  labels:
+    app: authentication
+spec:
+  replicas: 3  # replicas number
+  selector:
+    matchLabels:
+      app: authentication
+  template:
+    metadata:
+      labels:
+        app: authentication
+    spec:
+      containers:
+      - name: authentication-container
+        image: gianmariacasamenti1/authentication_service:latest  # Docker image
+        ports:
+        - containerPort: 5000  
+        env:
+        - name: JWT_SECRET_KEY
+          value: "your_jwt_secret_key" 
