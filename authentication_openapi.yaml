@@ -1,0 +1,161 @@
+openapi: 3.0.0
+info:
+  title: Authentication Service API
+  version: 1.0.0
+  description: API for handling user authentication, registration, login, password recovery, and management.
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Creates a new user account by accepting an email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "user@example.com"
+                password:
+                  type: string
+                  example: "securepassword"
+      responses:
+        201:
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User registered successfully"
+                  access_token:
+                    type: string
+                    example: "jwt.token.here"
+        400:
+          description: Invalid input or user already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input or User already exists"
+
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticates a user with their email and password and returns a JWT token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "user@example.com"
+                password:
+                  type: string
+                  example: "securepassword"
+      responses:
+        200:
+          description: User successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: "jwt.token.here"
+        401:
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Authentication failed"
+
+  /auth/logout:
+    get:
+      summary: User logout
+      description: Logs out the current user (simulation, does not invalidate tokens).
+      responses:
+        200:
+          description: User successfully logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User logged out successfully"
+
+  /auth/reset-password:
+    post:
+      summary: Reset user password
+      description: Sends a password reset email for the provided email address.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "user@example.com"
+      responses:
+        200:
+          description: Password reset email sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password reset email sent"
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User not found"
+
+  /auth/users:
+    get:
+      summary: Get all users
+      description: Retrieves a list of all users without exposing sensitive information like passwords.
+      responses:
+        200:
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: "user@example.com"
